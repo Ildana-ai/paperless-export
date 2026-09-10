@@ -12,7 +12,7 @@ license = { text = "MIT" }
 dependencies = []
 
 [project.optional-dependencies]
-xlsx = ["openpyxl>=3.1,<4"]
+xlsx = ["openpyxl>=3.1.5,<4"]
 
 [project.scripts]
 paperless-export = "paperless_export:main"
