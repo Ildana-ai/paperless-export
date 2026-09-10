@@ -320,32 +320,39 @@ class Handler(BaseHTTPRequestHandler):
         if not self.session.lock.acquire(blocking=False):
             return self._json(409, {"ok": False, "error": "an export is already running"})
         try:
-            run_dir = self.session.next_run_dir()
-            argv = argv_from_config(config, run_dir, self.session.insecure)
-            cfg = _config_or_400(argv)
-            self.session.begin_run(run_dir)     # validated: now the directory and the manifest move
-            result = px.export(cfg)
-            files = self.session.remember(list(result["files"]) + list(result["packed"]))
-            trailer = {str(k): str(v) for k, v in result["trailer"].items()}
-            payload = {"ok": True, "trailer": trailer, "files": files[:MAX_LISTED],
-                       "run_dir": str(run_dir)}
-            if len(files) > MAX_LISTED:
-                payload["more"] = len(files) - MAX_LISTED
-            self._json(200, payload)
-        except BadRequest as exc:
-            self._json(400, {"ok": False, "error": px.redact(str(exc)), "exit": px.EXIT_USAGE})
-        except px.UsageError as exc:
-            self._json(400, {"ok": False, "error": px.redact(f"usage error: {exc}"), "exit": px.EXIT_USAGE})
-        except px.ReconcileError as exc:
-            self._json(500, {"ok": False, "error": px.redact(f"RECONCILIATION FAILED: {exc}"),
-                             "exit": px.EXIT_RECONCILE})
-        except px.ExportError as exc:
-            self._json(500, {"ok": False, "error": px.redact(f"export failed: {exc}"), "exit": px.EXIT_FAIL})
-        except Exception as exc:                      # never leak a traceback to the browser
-            self._json(500, {"ok": False, "error": px.redact(f"export failed: {exc.__class__.__name__}"),
-                             "exit": px.EXIT_FAIL})
+            try:
+                run_dir = self.session.next_run_dir()
+                argv = argv_from_config(config, run_dir, self.session.insecure)
+                cfg = _config_or_400(argv)
+                self.session.begin_run(run_dir)  # validated: now the directory and the manifest move
+                result = px.export(cfg)
+                files = self.session.remember(list(result["files"]) + list(result["packed"]))
+                trailer = {str(k): str(v) for k, v in result["trailer"].items()}
+                payload = {"ok": True, "trailer": trailer, "files": files[:MAX_LISTED],
+                           "run_dir": str(run_dir)}
+                if len(files) > MAX_LISTED:
+                    payload["more"] = len(files) - MAX_LISTED
+                status, body = 200, payload
+            except BadRequest as exc:
+                status, body = 400, {"ok": False, "error": px.redact(str(exc)), "exit": px.EXIT_USAGE}
+            except px.UsageError as exc:
+                status, body = 400, {"ok": False, "error": px.redact(f"usage error: {exc}"),
+                                      "exit": px.EXIT_USAGE}
+            except px.ReconcileError as exc:
+                status, body = 500, {"ok": False, "error": px.redact(f"RECONCILIATION FAILED: {exc}"),
+                                      "exit": px.EXIT_RECONCILE}
+            except px.ExportError as exc:
+                status, body = 500, {"ok": False, "error": px.redact(f"export failed: {exc}"),
+                                      "exit": px.EXIT_FAIL}
+            except Exception as exc:                  # never leak a traceback to the browser
+                status, body = 500, {"ok": False, "error": px.redact(f"export failed: {exc.__class__.__name__}"),
+                                      "exit": px.EXIT_FAIL}
         finally:
+            # Released before the response is sent: a client that has read a reply for this
+            # request must never be able to race the next request against this lock, and sending
+            # first can't guarantee that (the bytes can reach the socket before this thread does).
             self.session.lock.release()
+        self._json(status, body)
 
 
 def _config_or_400(argv: list[str]):
