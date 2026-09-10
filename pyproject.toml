@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "paperless-export"
+version = "0.4.0"
+description = "Export a paperless-ngx document list to a sheet you can check."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = []
+
+[project.optional-dependencies]
+xlsx = ["openpyxl>=3.1,<4"]
+
+[project.scripts]
+paperless-export = "paperless_export:main"
+
+[tool.setuptools]
+py-modules = ["paperless_export", "paperless_serve", "paperless_front"]

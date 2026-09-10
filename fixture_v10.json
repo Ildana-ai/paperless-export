@@ -1,0 +1,293 @@
+{
+  "_": "The recorded paperless-ngx v10 responses. One source: the Python tests and the JavaScript conformance run both read this file.",
+  "base_url": "https://paperless.test",
+  "correspondents": [
+    {
+      "id": 1,
+      "name": "Acme"
+    }
+  ],
+  "document_types": [
+    {
+      "id": 1,
+      "name": "Invoice"
+    }
+  ],
+  "tags": [
+    {
+      "id": 1,
+      "name": "tax"
+    },
+    {
+      "id": 2,
+      "name": "2025"
+    }
+  ],
+  "storage_paths": [
+    {
+      "id": 1,
+      "name": "Taxes"
+    }
+  ],
+  "custom_fields": [
+    {
+      "id": 4,
+      "name": "Amount",
+      "data_type": "monetary",
+      "extra_data": {}
+    },
+    {
+      "id": 7,
+      "name": "Category",
+      "data_type": "select",
+      "extra_data": {
+        "select_options": [
+          {
+            "id": "abc123",
+            "label": "Utilities"
+          },
+          {
+            "id": "def456",
+            "label": "Medical"
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "name": "Invoice Number",
+      "data_type": "integer",
+      "extra_data": {}
+    },
+    {
+      "id": 9,
+      "name": "Related Doc",
+      "data_type": "documentlink",
+      "extra_data": {}
+    },
+    {
+      "id": 6,
+      "name": "Reviewed",
+      "data_type": "boolean",
+      "extra_data": {}
+    }
+  ],
+  "saved_views": [
+    {
+      "id": 3,
+      "name": "Tax Invoices 2025",
+      "filter_rules": [
+        {
+          "rule_type": 6,
+          "value": "1"
+        },
+        {
+          "rule_type": 9,
+          "value": "2025-01-01"
+        }
+      ],
+      "sort_field": "created",
+      "sort_reverse": true,
+      "display_fields": [
+        "title",
+        "correspondent",
+        "created",
+        "custom_field_4"
+      ]
+    }
+  ],
+  "documents": [
+    {
+      "id": 1,
+      "title": "Invoice A",
+      "archive_serial_number": 5,
+      "correspondent": 1,
+      "document_type": 1,
+      "storage_path": 1,
+      "tags": [
+        1,
+        2
+      ],
+      "created": "2025-01-05T00:00:00Z",
+      "added": "2025-01-06T00:00:00Z",
+      "modified": "2025-01-07T00:00:00Z",
+      "original_file_name": "a.pdf",
+      "archived_file_name": "a.pdf",
+      "page_count": 2,
+      "mime_type": "application/pdf",
+      "notes": [],
+      "versions": [
+        {
+          "id": 1,
+          "is_root": true
+        }
+      ],
+      "root_document": null,
+      "custom_fields": [
+        {
+          "field": 4,
+          "value": "USD10.50"
+        },
+        {
+          "field": 7,
+          "value": "abc123"
+        },
+        {
+          "field": 2,
+          "value": 100
+        },
+        {
+          "field": 6,
+          "value": true
+        },
+        {
+          "field": 9,
+          "value": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "=1+1",
+      "archive_serial_number": null,
+      "correspondent": null,
+      "document_type": null,
+      "storage_path": null,
+      "tags": [],
+      "created": "2025-02-05T00:00:00Z",
+      "added": "2025-02-06T00:00:00Z",
+      "modified": "2025-02-07T00:00:00Z",
+      "original_file_name": "b.pdf",
+      "archived_file_name": "",
+      "page_count": 1,
+      "mime_type": "application/pdf",
+      "notes": [],
+      "versions": [],
+      "root_document": null,
+      "custom_fields": [
+        {
+          "field": 4,
+          "value": "USD5.25"
+        },
+        {
+          "field": 2,
+          "value": 200
+        }
+      ]
+    }
+  ],
+  "count": 2,
+  "hostile_documents": [
+    {
+      "id": 91,
+      "title": "=1+1 and a \" quote and a \r carriage return; plus ; the separator",
+      "archive_serial_number": 0,
+      "correspondent": 1,
+      "document_type": null,
+      "storage_path": null,
+      "tags": [
+        1,
+        99
+      ],
+      "created": "2025-03-04T00:00:00Z",
+      "added": "2025-03-05T00:00:00Z",
+      "modified": "2025-03-06T00:00:00Z",
+      "original_file_name": "trap.pdf",
+      "archived_file_name": "",
+      "page_count": 0,
+      "mime_type": "application/pdf",
+      "notes": [
+        {
+          "id": 1
+        }
+      ],
+      "versions": [],
+      "root_document": null,
+      "content": "line one\nline two",
+      "custom_fields": [
+        {
+          "field": 4,
+          "value": "USD10.00"
+        },
+        {
+          "field": 7,
+          "value": "no-such-option"
+        },
+        {
+          "field": 2,
+          "value": 0
+        },
+        {
+          "field": 9,
+          "value": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "field": 6,
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": 92,
+      "title": "ünïcode ✓ and a tab\tinside",
+      "archive_serial_number": null,
+      "correspondent": null,
+      "document_type": 1,
+      "storage_path": 1,
+      "tags": [],
+      "created": "2024-12-31T00:00:00Z",
+      "added": "2025-01-01T00:00:00Z",
+      "modified": "2025-01-02T00:00:00Z",
+      "original_file_name": "",
+      "archived_file_name": "u.pdf",
+      "page_count": null,
+      "mime_type": "application/pdf",
+      "notes": [],
+      "versions": [],
+      "root_document": null,
+      "content": "",
+      "custom_fields": [
+        {
+          "field": 4,
+          "value": "USD0.50"
+        },
+        {
+          "field": 2,
+          "value": -5
+        }
+      ]
+    },
+    {
+      "id": 93,
+      "title": "negative decimal amount",
+      "archive_serial_number": null,
+      "correspondent": null,
+      "document_type": null,
+      "storage_path": null,
+      "tags": [],
+      "created": "2025-06-01T00:00:00Z",
+      "added": "2025-06-02T00:00:00Z",
+      "modified": "2025-06-03T00:00:00Z",
+      "original_file_name": "refund.pdf",
+      "archived_file_name": "",
+      "page_count": 1,
+      "mime_type": "application/pdf",
+      "notes": [],
+      "versions": [],
+      "root_document": null,
+      "content": "",
+      "custom_fields": [
+        {
+          "field": 4,
+          "value": "USD-12.50"
+        }
+      ]
+    }
+  ]
+}

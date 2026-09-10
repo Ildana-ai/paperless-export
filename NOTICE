@@ -1,0 +1,11 @@
+paperless-export — brand notice
+
+Kept separate from LICENSE so that automated licence detection reads this project correctly as MIT.
+
+paperless-export has no embedded third-party code. `--format xlsx` depends on openpyxl
+(https://foss.heptapod.net/openpyxl/openpyxl), installed from PyPI under its own MIT licence.
+Every other format is stdlib only.
+
+Brand
+  The Ildana name, logo, and brand artwork are not covered by the MIT licence
+  and may not be used to represent other projects or organizations.

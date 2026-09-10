@@ -1,0 +1,13 @@
+.env
+__pycache__/
+.DS_Store
+paperless-export-*/
+build/
+dist/
+*.egg-info/
+*.csv
+*.xlsx
+*.json
+*.jsonl
+*.inventory.html
+!fixture_v10.json
