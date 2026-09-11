@@ -318,6 +318,41 @@ class TestRunning(unittest.TestCase):
             self.assertEqual(sorted(p.name for p in workdir.iterdir()), before)
             self.assertIsNone(session.run_dir)
 
+    def test_the_lock_releases_before_the_response_is_sent(self):
+        """A client that has read a reply for request N must never be able to race request N+1
+        against N's own lock — found as a real flake: a run of sequential bad /run bodies, each
+        meant to return 400, got a 409 because an earlier request's lock outlived its own response.
+        """
+        events: list[str] = []
+
+        class WatchedLock:
+            def __init__(self, inner):
+                self._inner = inner
+
+            def acquire(self, *args, **kwargs):
+                return self._inner.acquire(*args, **kwargs)
+
+            def release(self):
+                events.append("release")
+                return self._inner.release()
+
+        with running() as (httpd, session, url, _wd, thread):
+            session.lock = WatchedLock(session.lock)
+            original_json = ps.Handler._json
+
+            def watched_json(self, status, payload):
+                events.append("json")
+                return original_json(self, status, payload)
+
+            ps.Handler._json = watched_json
+            try:
+                wire = Wire(httpd, session)
+                status, _payload = wire.json("POST", "/run", body={"locale": "klingon"})
+            finally:
+                ps.Handler._json = original_json
+            self.assertEqual(status, 400)
+            self.assertEqual(events, ["release", "json"])
+
     def test_a_reconciliation_failure_reaches_the_browser_as_loudly_as_the_terminal(self):
         os.environ["PAPERLESS_URL"] = "https://paperless.test"
         os.environ["PAPERLESS_TOKEN"] = "fixture-token-do-not-leak"
